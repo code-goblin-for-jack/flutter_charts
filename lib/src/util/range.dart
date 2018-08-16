@@ -346,9 +346,14 @@ class YScalerAndLabelFormatter {
   ///
   /// **The returned [Interval] is intended to be used as the full extend
   /// of the unscaled Y axis.**
-  Interval get labelValuesAndDataRangesMerged =>
-      new Interval(labelValues.reduce(math.min), labelValues.reduce(math.max))
-          .merge(dataRange);
+  Interval get labelValuesAndDataRangesMerged {
+    double max = labelValues.reduce(math.max);
+    if (max <= 0.0)
+      max = 10.0;
+
+    return new Interval(labelValues.reduce(math.min), max)
+        .merge(dataRange);
+  }
 }
 
 /// Manages labels and their values: scaled in , unscaled, and presented (formatted)
