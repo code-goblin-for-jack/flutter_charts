@@ -1,78 +1,192 @@
-#+TODO: TODO IN-PROGRESS WAITING DONE CANCELED
-
-* Refactorings (Flutter Charts)
-
-1. [X] Ask a question on how to achieve the paint in CustomPainter does not go over boundaries
-2. [-]  *Oct Release preparation*
-   1) [X] *restructure line_chart_painter and other files to support extension as bar_chart_painter*
-   2) [X] Bar preparation: in Layouter layout, add also calcs and members for barGridXCoord (bar grid vertical lines are  moved by half step compared to lineGrid)
-      - [X] class *StackedValue* - maintains value, stackFrom, stackTo
-
-      - [X] class stackedDataRows - in ChartData
-
-        - [X] list of StackedValue
-        - [X] On VerticalBar, show the bars rather than lines
-        - [X] On VerticalBar layouter, move the vertical lines shifter around  bars, not it their middle
-
-        - [X] methods to create stackedDataRows from dataRows. the idea is, on Bar chart painter, we just extend line chart painter, and:
-
-          - [X] keep layouting and grid painting
-
-          - [X] keep X/Y axis painting
-
-   3) [X] Move presenters to presenters.dart
-
-   4) [X] split line_chart_painters.dart to chart_painter.dart and line_chart_painter.dart, column_chart_painter.dart etc
-
-   5) [X] split options for line and vertical bar
-
-   6) [X] Refactor/rename
-
-      1) [X] SimpleChartLayouter -> ChartLayouter 
-
-      2) [X] LabelScalerFormatter -> YScalerAndLabelFormatter
-
-      3) [X] labelScaler -> yScaler (watch for conflicts)
-
-      4) [X] elements_layouters to layouters
-
-      5) [X] PointAndPresenterCreator ->  PresenterCreator
-
-      6) [X] ValuePoint -> Point
-
-      7) [X] ValuePresented -> Presenter
-
-      8) [X] PointAndLine -> LineAndHotspot (string substitution, upper/lower)
-
-      9) [X] PointAndLineLeafCreator -> LineAndHotspotLeafCreator
-
-      10) [X] commit and push
-
-      11) [X] split files into dir-per-chart-type structure
-
-   7) [X] Remove Android and ios from .gitignore. Right now, if someone gets flutter_charts from github, they have to run ~flutter create .~  
-   8) [X] Reorganize todos  document first - go over todo 0 
-   9) [ ] *Make sure and put checks, that all paint operations remain within =size=* - alternative : Use *ClipLayout*.
-      + [ ] *How to do this for TextPainter.paint??*
-
-   10) [X] Move todos: todo 3 => 4 , 2 => 3, 1 => 2 0 => 1, 00 => 0
-   11) [ ] Change all reduce to fold to better handle no data
-
-   12) [ ] *Design - Document*
-
-   13) [ ] Draw UML Diagram. Think of a way do decrease dependency of classes on others, or make clear why dependecy needed.
-
-   14) [X] Create project flutter_charts. Empty, add Readme, license etc.
+#+OPTIONS: toc:3
+#+TODO: TODO IN-PROGRESS LATER DONE NOTE
 
 
-* IN-PROGRESS  Changing the structure of the "data source" class in Flutter Charts *This may change significantly.*
+* TODO Bugs to report or ask on Stack Overflow
 
-I realize we discussed we will make the new internal structure of ~ChartData.dataRows~ to be something like ~List<List<Point>~. During this week I went through some torments and I think I arrived at a change; but I do not want to push it without explanation. So let me describe the current structure, and the newly suggested structure of ~ChartData~ (renaming it to InternalChartData and providing adaptors).
+** TODO Stack overflow: add question on how to migrate int extensions - note in gitter
 
-** Current ~ChartData~ structure - see  file:../lib/src/chart/data.dart
+// todo-10 mz ori
+
+Converting some code to 2.0 .. How can one tear-off a specifically typed function in 2.0? My problem is for example:
+
+`_values.reduce(math.min)`
+
+If _values were double in version 1.0x, this is ok. In 2.0 I get:
+
+`type '(num, num) => num' is not a subtype of type '(double, double) => double' of 'combine'`
+
+Here , `combine` I assume is a method in `reduce`. It is probably obvious but eluding me. Thanks.
 
 
-** Towards a new, suggested ~InternalChartData~ class - this is the class Flutter Charts will work from at it's core.
+Emulator: 
+- v 24: works.
+- v 25: fails loading!!!
+
+
+@RandalSchwartz : Thanks, that is interesting. I will google for it. Although I am confused what num.max going away would mean, that num also goes away?  `math.max` is defined as:
+
+`external T max<T extends num>(T a, T b);`
+
+It sounds like in the end this is just a type system complaint, I hope we should be able to use a list of num and then do a concrete operations on them, at least if they are all the same type (int or double, which they are) in the data I passed. 
+
+** TODO Flutter bugs: Report issue of TextPainter hangs on certain sizes with ellipses '...' 
+
+See file:./bug-text-painter-1.png
+See file:./bug-text-painter-2.png
+
+* IN-PROGRESS Flutter Charts Bugs status
+
+- [X] Chart area needs clipping in the application
+- [ ] The stock charts example contains a bug which reverts the series on the negative values - both negative dataRows, and dataRowsColors must be reverted for the chart stacks to show in intended order (black, green grey red from top). But even then, dataRowsLegends are incorrect. 
+- [X] https://github.com/mzimmerm/flutter_charts/issues/5 - Coloring support: Make line chart dot colors settable
+
+
+* IN-PROGRESS New release may 2018 todo-now finish this and remove section
+
+- [X] Test if works
+- [X] charts, try to set on input, mix of double and int, test if works - create a sample input for it
+- [X] finish charts - last todo-4, leave -5 for immediate 
+- [X] implement or remove todos
+- [X] -3, -4, -5 ... change the once I want to keep to -10
+- [X] look over 00, maybe change to -1
+- [X] only keep -1 -2. -3 will become high priority
+- [X] rename -10 to -3
+- [X] Put Legend back - figure out why the stress causes exception - allow silently remove the legend.
+- [X] add section to charts readme on how to create and run  tests (position of file, what to add to pubspec.yaml, run: 'flutter test' - that is all. Note: also append https://flutter.io/testing/
+- [X] add ability to expose IncrementalLayouter
+- [X] add to readme:
+  - [X] changes to latest version, screenshots of gradual constraining
+- [X] run analyser, make sure it runs
+- [ ] make sure example exists on pub.dartlang.org
+- [ ] test charts
+- [ ] test charts within flutter_charts_sample_app
+- [ ] release new version
+  - [ ] follow steps in the Pub - Publish section
+- [ ] test charts within flutter_charts_sample_app
+
+* How are todos used in code
+- todo-1 long term low priority
+- todo-2 long term higher priority
+- todo-10 release-blocker (created typically during a new work in progress)
+- todo-11, -12 etc - work in progress, higher number is higher priority or more immediate
+
+* NOTE Adding images to README.org
+
+*Images are not allowed on pub  https://pub.dartlang.org. When new images are added to README, we need to put the images somewhere outside pub, README.md must only contain links to the images. We decided to store images in a special directory doc/readme_images, and point to then via github*. 
+
+This is the process of adding images to README.org, which survives conversion to README.md, and publishing on pub:
+
+- [ ] Add an image to README.org using the regular image capture.
+- [ ] Show the image links directly
+- [ ] Rename the images to a readable names, both on disk (wdir-) and in org file, for example: =README.org_20180618_000741_0oAyud.png= to =README.org_iterative-layout-step-4.png=
+- [ ] Move the image to flutter_charts ~doc/readme_images~
+- [ ] Change the links in org file by changing =file:= to =file:doc/readme_images/=
+  - [ ] org file, look like =file:doc/readme_images/README.org_iterative-layout-step-4.png=
+
+
+* NOTE Pub - Publish : Workflow of publishing new version on flutter_charts on https://pub.dartlang.org
+** ~cd flutter_charts; flutter packages upgrade~
+** Test app from IntelliJ
+
+** Run ~flutter test~. Also see  https://flutter.io/testing/
+** Notes:
+*** Pub requires the following file in project to show the correct tabs on pub
+**** Tab README.md    - Needs the file
+**** Tab CHANGELOG.md - Needs the file
+**** Tab Example      - this tab appears if the project file ~file:flutter_charts/example/lib/main.dart~ exists
+**** Tab Installing   - shows automatically
+** IF *README.md* needs change
+*** *README.org*: ! *make sure image links point to flutter_charts ~/doc/readme_images~ as, for example:* [ [ file:doc/readme_images/README.org_IMGID.png ] ]
+*** *README.org*: Conversion steps to *README.md* 
+
+To convert *README.org* to *README.md*, we need to do a few extra steps for README.md image links to be readable on https://pub.dartlang.org.
+
+1. Note: Ensure README.org file which has the "Table of contents" heading marked as :TOC:noexport: (e.d. Contents :TOC:noexport:) - this causes the TOC update on every save.
+   - The :noexport: is currently needed , otherwise error Unable to resolve link: "link-converted-from-first-heading"
+2. *README.org*: Export org to md: ~C-c C-e m m~ in the org file to create the generated md file
+3. *README.md*: Delete generated TOC, the whole section named "# Table of Contents" (still needed with :TOC:noexport:)
+4. *README.md*: Generate md-native TOC:
+5. Cursor on top
+6. ~M-x: markdown-toc-generate-toc~
+7. *README.md*: Fix image links in the README.md - links must look like this:
+  #+BEGIN_SRC markdown
+  -![img](doc/readme_images/README.org_20171102_180657_27063rZs.png)
+  +![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_180657_27063rZs.png)
+  #+END_SRC
+   - *README.md*: This is achieved with: ~M-x replace-string~ then ~doc/readme_images/~ ~https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/~
+** *pubspec.yaml*: - Increase version number "version: 0.1.8"
+** *CHANGELOG.md*: - Add comment section for new version
+** ~git add .; git commit; git push~
+** *README.md*: on https://github.com/mzimmerm/flutter_charts - check if image links have a full path
+** ~flutter packages pub publish --dry-run~
+** ~flutter packages pub publish~
+** Check https://pub.dartlang.org/packages/flutter_charts
+** Test the package that was just published
+*** ~cd flutter_charts_sample_app; flutter packages pub upgrade; flutter packages pub get; flutter run~
+
+* DONE Add ability to create a Table of Contents to README.org
+- [X] Install toc-org package
+- [X] Add to init.el
+#+BEGIN_SRC elisp
+(if (require 'toc-org nil t)
+(add-hook 'org-mode-hook 'toc-org-enable)
+(warn "toc-org not found"))
+#+END_SRC
+- [X] Every time README.org is saved, first heading with a :TOC: tag will be updated with the current table of contents.
+- [X] So nothing special need be done after the above is configured.
+ 
+* TODO Enhancements todo
+
+** Refactorings
+*** Introduce Mixin Layoutable by applyParentOffset()
+*** Introduce Mixin Paintable by paint()
+** Enhancements in progress or planned - priority order
+
+*** Create a document / image showing chart layout and spacing - show option variables on image
+Also:
+- document applyParentOffset and pull from Container?
+- go over Container and document
+
+*** Add org mode based integration build, which allows to run and test all "known/predefined" code scenarios that work. 
+*** To the above org mode base integration build, add ability to "capture self", and compare result as jpeg/svg with known jpeg/svg results
+*** Add formatter for YLabels.
+*** Option additions that control look:
+**** Add options to hide the grid (keep axes)
+**** Add options to hide  axes (if axes not shown, labels should not show?)
+**** Decrease option for default spacing around the Y axis.
+*** Provide tooltip support
+*** Provide a few more chart types: Spline line chart (stacked line chart), Grouped VerticalBar chart,
+.
+*** Data types
+**** Independent (X value) data types
+***** There should be adapters from any dependent (X value) data types:
+****** Ordinal - x values spaced evenly, only sequence matters
+****** Measured - x values are convertible to numbers
+******* Date types
+******* Number types
+******* Others?
+**** Dependent (Y value) data types - for now, keep double, can provide converters.
+
+*** For ChartOptions.useUserProvidedYLabels = true. See example with User defined YLabels: Current implementation sets the minimum of dataRows range (1.0 in the example) on the level of the first Y Label ("Ok" in this example), and the maximum  of dataRows range (10.0 in this example) on the level of the last Y Label ("High" in this example). This is not desirable, we need to add a userProvidedYLabelsBoundaryMin/Max.
+*** Next, add ability to invert X and Y axis (values on horizontal axis)
+*** TextPainter notes
+
+If layout() is called, following paint() always prints full line  (goes to line 2 if the text contains LF).
+* DONE Enhancements implemented
+** DONE Re-implement the layout more generically and clearly. Space saving changes such as /tilting/ labels
+** DONE Labels auto-fit: scale, tilt or skip labels to fit using *HorizontalLabelsContainer*
+
+* Terminology and Selected Classes
+
+- (Presenter)Leaf       :: The finest visual element presented in each  "column of view" in chart - that is, all widgets representing series of data displayed above each X label. For example, for Line chart, the leaf would be one line and dot representing one Y value at one X label. For the bar chart, the leaf would be one bar representing one (stacked) Y value at one X label.
+- Classes: Presenter, LineAndHotspotPresenter, VerticalBarPresenter, PresenterCreator
+- Painter               :: Class which paints to chart to canvas. Terminology and class structure taken from Flutter's Painter and Painting classes.
+- Classes: todo
+
+* Older Notes
+
+** Towards a new, suggested ~InternalChartData~ class - this is the class Flutter Charts will work from at it's core. *This may change significantly.*
 
 First, let me summarize that current (unexpressed) constraints on  the current ~ChartData.dataRows~ - in essence, all corresponding list lengths must be the same:
 
@@ -316,64 +430,43 @@ Also, although "from a separation of data and view" principle I originally put s
 - [ ] ChartOptions.toLabel(label) -> ChartData
 - 
 
-* TODO After Release
+** Refactoring todos
 
-1) [ ] Resolve todo 0
-
-3) [ ] Pull dataRows, options, and PointsColumns into class named ChartData (ChartModel?), getting rid of public dataRows, PointsColumns, options and refactor code to use ChartModel.
-
-4) [ ] Now we manage rowIndex (seriesIndex) in StackableValuePoint as dataRowIndex. So:
+1) [ ] Now we manage rowIndex (seriesIndex) in StackableValuePoint as dataRowIndex. So:
    + Add rowIndex on Presenter (Leaf) as dataRowIndex.
 
    + [ ] remove rowIndex from everywhere - createPointPresenter (createPresentor) , _createPresentersInColumn - and when it is needed for color, just use the Presenter.dataRowIndex.
 
-5) [ ] Split Function of vertGridLines- *vertGridLines[col].from.dx* serves both to draw grid lines, and ValuePoints. Add, right in XLayouterOutput, a variable for valuePointX - *what is the difference from labelX???*.
+2) [ ] Split Function of vertGridLines- *vertGridLines[col].from.dx* serves both to draw grid lines, and ValuePoints. Add, right in XLayouterOutput, a variable for valuePointX - *what is the difference from labelX???*.
 
-6) [ ] Redefine Points and Presenters internal structure, as (from the bottom) double-linked list of points (forms Columns), and double-linked list of Columns (forms PointsColumns = Data) and Presenters (PresentersColumns)
+3) [ ] Redefine Points and Presenters internal structure, as (from the bottom) double-linked list of points (forms Columns), and double-linked list of Columns (forms PointsColumns = Data) and Presenters (PresentersColumns)
 
-7) [ ] Member privacy issues
+4) [ ] Member privacy issues
 
-   1) [ ] ChartPainter.layouter is forced non-private (_) if we want to allow extensibility outside of the chart package (extensibility by clients).
+   + [ ] ChartPainter.layouter is forced non-private (_) if we want to allow extensibility outside of the chart package (extensibility by clients).
+   + [ ] Go over usage of private accessing private _chartLayouter._options - suspect. But maybe ok
 
-      + Other examples of same issue:
+5) [ ] Think of a way to get rid of the need to upcast in baseclass using " as SomeClass" - 2 occurences in "presenter as presenters.PointAndLinePresenter"
 
-        - 
+6) [ ] I think yAxisAbsMin/Max passed to layouters is switched. Fix it
 
-   2) [ ] Go over usage of private accessing private _chartLayouter._options - suspect. But maybe ok
+7) *REMOVE NOISE OF nextRightPointsColumn nextRightColumnValuePoint*
 
-8) [ ] Think of a way to get rid of the need to upcast in baseclass using " as SomeClass" - 2 occurences in "presenter as presenters.PointAndLinePresenter"
+   1) [ ] *nextRightPointsColumn* IS LIKELY UNUSED, REMOVE but check.
 
-9) [ ] I think yAxisAbsMin/Max passed to layouters is switched. Fix it
+   2) [ ] *nextRightColumnValuePoint*  IS LIKELY UNUSED, REMOVE but check.
 
-10) *REMOVE NOISE OF nextRightPointsColumn nextRightColumnValuePoint*
+8) [ ] Create a document definiting sequence of layouters, and what each does
+   - [ ] particular attention to where scaling happents
+9) [ ] *Legend improvements*
 
-    1) [ ] *nextRightPointsColumn* IS LIKELY UNUSED, REMOVE but check.
+   1) [ ] Implement legend as container, with layout that can wrap.
 
-    2) [ ] *nextRightColumnValuePoint*  IS LIKELY UNUSED, REMOVE but check.
-
-11) [ ] Create a document definiting sequence of layouters, and what each does
-    - [ ] particular attention to where scaling happents
-12) [ ] *Labels and legend improvements*
-
-    1) [ ] labels when printed: 
-
-       1) [ ] if too long, left justify and clip
-
-    2) [ ] legend text clip if too long
-
-13) [ ] Fix and test formalities, add docs, add examples, resolve versionning and library dependencies and branches, other preps before push to pub
-    + [ ] *list it here*
-    + [ ] 
-    + [ ] fix dependencies in pubspec (rm mz)
+10) [ ] Fix and test formalities, add docs, add examples, resolve versionning and library dependencies and branches, other preps before push to pub
     + [ ] Test and ensure empty data work.
     + [ ] *ADD TESTS FOR RANGE, END TO END ETC*
 
-
-* TODO Future: Layout Recreation.
-23. [ ] Look over Hotspot calcs and positions, may need to move to GuidingPoints or LayoutValues
-
-
-* TODO Consider Change naming conventions to WX, HY, CY, CX so all names are consistent 
+** Consider Change naming conventions to WX, HY, CY, CX so all names are consistent 
    - whateverOWX (width along x axis    - when context is offset of some other element)
    - whateverOHY (height along y axis   - when context is offset of some other element)
    - whateverCX  (X coordinate  )       - if it is just a point

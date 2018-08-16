@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' as material show Colors;
 import 'package:flutter/widgets.dart' as widgets; // note: external package
 
 import 'package:flutter_charts/flutter_charts.dart' as common;
@@ -61,7 +60,7 @@ abstract class ChartPainter extends widgets.CustomPainter {
     drawPresentersColumns(canvas); // bars (bar chart), lines and points (line)
 
     // clip canvas to size - this does nothing
-    // todo -1: THIS canvas.clipRect VVVV CAUSES THE PAINT() TO BE CALLED AGAIN. WHY??
+    // todo-1: THIS canvas.clipRect VVVV CAUSES THE PAINT() TO BE CALLED AGAIN. WHY??
     // canvas.clipRect(const ui.Offset(0.0, 0.0) & size); // Offset & Size => Rect
   }
 

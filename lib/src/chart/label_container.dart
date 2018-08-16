@@ -2,27 +2,18 @@ import 'package:flutter/widgets.dart' as widgets
     show
         TextStyle,
         TextSpan,
-        TextPainter,
-        RotatedBox,
-        Transform,
-        Matrix4,
-        Alignment;
-import 'package:flutter/material.dart' as material show Colors;
+        TextPainter;
 
 import 'package:vector_math/vector_math.dart' as vector_math
-    show Matrix2, Vector2;
+    show Matrix2;
 
 import 'dart:ui' as ui
-    show TextAlign, TextDirection, Size, Canvas, Offset, Rect;
-
-import 'package:flutter_charts/src/chart/options.dart';
+    show TextAlign, TextDirection, Size, Canvas, Offset;
 
 import 'package:flutter_charts/src/chart/container.dart'
     as flutter_charts_container show Container;
 
 import '../util/geometry.dart' as geometry;
-
-import 'dart:math' as math show PI;
 
 /// Container of one label anywhere on the chart, in Labels, Axis, Titles, etc.
 ///
@@ -108,7 +99,7 @@ class LabelContainer extends flutter_charts_container.Container {
       textAlign: _labelStyle.textAlign,
       // center in available space
       textScaleFactor: _labelStyle.textScaleFactor,
-      ellipsis: "...", // forces a single line - without it, wraps at width
+      // todo-11 removed, causes lockup: ellipsis: "...", // forces a single line - without it, wraps at width
     ); //  textScaleFactor does nothing ??
 
     // Make sure to call layout - this instance is always "clean"
@@ -190,10 +181,10 @@ class LabelStyle {
   double textScaleFactor;
 
   LabelStyle({
-    widgets.TextStyle this.textStyle,
-    ui.TextDirection this.textDirection,
-    ui.TextAlign this.textAlign,
-    double this.textScaleFactor,
+    this.textStyle,
+    this.textDirection,
+    this.textAlign,
+    this.textScaleFactor,
   });
 }
 

@@ -1,13 +1,11 @@
 import 'package:flutter_charts/src/chart/container.dart'
     show
-        XContainer,
         Container,
-        AdjustableContent,
         AdjustableContentChartAreaContainer;
 import 'package:flutter_charts/src/chart/options.dart' show ChartOptions;
 import 'package:vector_math/vector_math.dart' as vector_math
-    show Matrix2, Vector2;
-import 'dart:math' as math show PI;
+    show Matrix2;
+import 'dart:math' as math show pi;
 
 enum LabelFitMethod { RotateLabels, DecreaseLabelFont, SkipLabels }
 
@@ -20,7 +18,8 @@ enum LabelFitMethod { RotateLabels, DecreaseLabelFont, SkipLabels }
 /// The steps are repeated at most [maxLabelReLayouts] times.
 /// If a "fit" is not achieved on last step, the last step is repeated
 /// until [maxLabelReLayouts] is reached.
-class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy { // todo -11 try implements and reason about it
+class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy {
+  // todo-2 try using Mixins
 
   /// Members related to re-layout (iterative layout).
   /// The values are incremental, each re-layout "accumulates" changes
@@ -43,6 +42,7 @@ class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy { // todo 
   double _decreaseLabelFontRatio;
 
   double get labelFontSize => _labelFontSize;
+
   /// For tilted labels, this is the forward rotation matrix
   /// to apply on both Canvas AND label envelope's topLeft offset's coordinate
   /// (pivoted on origin, once all chart offsets are applied to label).
@@ -65,12 +65,14 @@ class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy { // todo 
 
   DefaultIterativeLabelLayoutStrategy({
     ChartOptions options,
-  }) : super(options: options) {
-
+  }) : super(
+          options: options,
+        ) {
+    _options = options;
     _decreaseLabelFontRatio = _options.decreaseLabelFontRatio;
     _showEveryNthLabel = _options.showEveryNthLabel;
     _maxLabelReLayouts = _options.maxLabelReLayouts;
-    _multiplyLabelSkip = options.multiplyLabelSkip;
+    _multiplyLabelSkip = _options.multiplyLabelSkip;
   }
 
   LabelFitMethod _atDepth(int depth) {
@@ -129,8 +131,8 @@ class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy { // todo 
 
   void _reLayoutRotateLabels() {
     double labelTiltRadians = _options.labelTiltRadians;
-    //  angle must be in interval `<-math.PI, +math.PI>`
-    if (!(-1 * math.PI <= labelTiltRadians && labelTiltRadians <= math.PI)) {
+    //  angle must be in interval `<-math.pi, +math.pi>`
+    if (!(-1 * math.pi <= labelTiltRadians && labelTiltRadians <= math.pi)) {
       throw new StateError("angle must be between -PI and +PI");
     }
 
@@ -155,25 +157,26 @@ class DefaultIterativeLabelLayoutStrategy extends LabelLayoutStrategy { // todo 
     //   so the label tilt is inverse of the canvas tilt
     _labelTiltMatrix = new vector_math.Matrix2.rotation(-_labelTiltRadians);
   }
-
 }
 
-/// Interface for layout strategies to achieve that labels,
-/// or more generally, some adjustable content "fit" in a container.
+/// Base class for layout strategies.
+///
+/// A Layout strategy is a pluggable class which achieves that labels,
+/// (or more generally, some adjustable content) "fit" in a container.
 ///
 /// Strategy defines a zero or more sequences of steps,
-/// each performing a specific code to achieve labels fit.
+/// each performing a specific code to achieve labels fit, for example:
+///   - Skip every 2nd label
+///   - Tilt all labels
+///   - Decrease label font size
 abstract class LabelLayoutStrategy {
   ChartOptions _options;
   AdjustableContentChartAreaContainer _container;
 
   LabelLayoutStrategy({
-    ChartOptions options,
-  }) {
-    _options = options;
-  }
+    ChartOptions options, // @required
+  }); // same as {}
 
-  // todo -11 change to setter
   void onContainer(AdjustableContentChartAreaContainer container) {
     this._container = container;
   }
@@ -195,7 +198,8 @@ abstract class LabelLayoutStrategy {
   /// (pivoted on origin, once all chart offsets are applied to label).
   /// This is always the inverse of [_labelTiltMatrix].
   /// Just passed down to [LabelContainer]s.
-  vector_math.Matrix2 get canvasTiltMatrix => new vector_math.Matrix2.identity();
+  vector_math.Matrix2 get canvasTiltMatrix =>
+      new vector_math.Matrix2.identity();
 
   /// Angle by which labels are tilted.
   /// Just passed down to [LabelContainer]s.
@@ -208,8 +212,5 @@ abstract class LabelLayoutStrategy {
   /// Allows to "thin" labels to fit.
   int get showEveryNthLabel => 1;
 
-
   double get labelFontSize;
-
-
 }

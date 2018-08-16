@@ -1,90 +1,148 @@
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
 
-- [Table of contents     :TOC:<a id="sec-1" name="sec-1"></a>](#table-of-contents-----toca-idsec-1-namesec-1a)
-- [Flutter Charts - How to include the flutter\_charts library in your application<a id="sec-2" name="sec-2"></a>](#flutter-charts---how-to-include-the-fluttercharts-library-in-your-applicationa-idsec-2-namesec-2a)
-- [An example of Flutter Chart output<a id="sec-3" name="sec-3"></a>](#an-example-of-flutter-chart-outputa-idsec-3-namesec-3a)
-- [Known packages, libraries and apps that use this this flutter\_charts package<a id="sec-4" name="sec-4"></a>](#known-packages-libraries-and-apps-that-use-this-this-fluttercharts-packagea-idsec-4-namesec-4a)
-- [Flutter Charts - an overview: data, options, classes<a id="sec-5" name="sec-5"></a>](#flutter-charts---an-overview-data-options-classesa-idsec-5-namesec-5a)
-- [Experimenting with Flutter Charts: Using the included example app `file:example/lib/main.dart`<a id="sec-6" name="sec-6"></a>](#experimenting-with-flutter-charts-using-the-included-example-app-fileexamplelibmaindarta-idsec-6-namesec-6a)
-- [Flutter Charts - examples: LineChart and VerticalBarChart. Code and resulting charts<a id="sec-7" name="sec-7"></a>](#flutter-charts---examples-linechart-and-verticalbarchart-code-and-resulting-chartsa-idsec-7-namesec-7a)
-    - [Random Data (Y values), Random X Labels, Random Colors, Random Data Rows Legends, Data-Generated Y Labels.<a id="sec-7-1" name="sec-7-1"></a>](#random-data-y-values-random-x-labels-random-colors-random-data-rows-legends-data-generated-y-labelsa-idsec-7-1-namesec-7-1a)
-    - [User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, Data-Generated Y Labels,<a id="sec-7-2" name="sec-7-2"></a>](#user-provided-data-y-values-user-provided-x-labels-random-colors-user-provided-data-rows-legends-data-generated-y-labelsa-idsec-7-2-namesec-7-2a)
-    - [User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, User-Provided Y Labels<a id="sec-7-3" name="sec-7-3"></a>](#user-provided-data-y-values-user-provided-x-labels-random-colors-user-provided-data-rows-legends-user-provided-y-labelsa-idsec-7-3-namesec-7-3a)
-- [VerticalBar Chart - one more example, showing positive/negative stacks:<a id="sec-8" name="sec-8"></a>](#verticalbar-chart---one-more-example-showing-positivenegative-stacksa-idsec-8-namesec-8a)
-    - [User-Provided Data (Y values), User-Provided X Labels, User-Provided Colors, User-Provided Data Rows Legends, User-Provided Y Labels<a id="sec-8-1" name="sec-8-1"></a>](#user-provided-data-y-values-user-provided-x-labels-user-provided-colors-user-provided-data-rows-legends-user-provided-y-labelsa-idsec-8-1-namesec-8-1a)
-- [Bugs status<a id="sec-9" name="sec-9"></a>](#bugs-statusa-idsec-9-namesec-9a)
-- [Future enhancements and work<a id="sec-10" name="sec-10"></a>](#future-enhancements-and-worka-idsec-10-namesec-10a)
-- [TODO Terminology and Selected Classes<a id="sec-11" name="sec-11"></a>](#todo-terminology-and-selected-classesa-idsec-11-namesec-11a)
-- [Internal notes<a id="sec-12" name="sec-12"></a>](#internal-notesa-idsec-12-namesec-12a)
-    - [DONE Add ability to create a Table of Contents to README.org<a id="sec-12-1" name="sec-12-1"></a>](#done-add-ability-to-create-a-table-of-contents-to-readmeorga-idsec-12-1-namesec-12-1a)
-    - [Adding images to README.org<a id="sec-12-2" name="sec-12-2"></a>](#adding-images-to-readmeorga-idsec-12-2-namesec-12-2a)
-    - [Pub - Publishing workflow on <https://pub.dartlang.org><a id="sec-12-3" name="sec-12-3"></a>](#pub---publishing-workflow-on-httpspubdartlangorga-idsec-12-3-namesec-12-3a)
-        - [Notes:<a id="sec-12-3-1" name="sec-12-3-1"></a>](#notesa-idsec-12-3-1-namesec-12-3-1a)
-        - [IF **README.md** needs change<a id="sec-12-3-2" name="sec-12-3-2"></a>](#if-readmemd-needs-changea-idsec-12-3-2-namesec-12-3-2a)
-        - [**pubspec.yaml** - Increase version number<a id="sec-12-3-3" name="sec-12-3-3"></a>](#pubspecyaml---increase-version-numbera-idsec-12-3-3-namesec-12-3-3a)
-        - [`cd flutter_charts; flutter packages pub upgrade`<a id="sec-12-3-4" name="sec-12-3-4"></a>](#cd-fluttercharts-flutter-packages-pub-upgradea-idsec-12-3-4-namesec-12-3-4a)
-        - [`cd flutter_charts; flutter packages pub get`<a id="sec-12-3-5" name="sec-12-3-5"></a>](#cd-fluttercharts-flutter-packages-pub-geta-idsec-12-3-5-namesec-12-3-5a)
-        - [Test included app from IntelliJ<a id="sec-12-3-6" name="sec-12-3-6"></a>](#test-included-app-from-intellija-idsec-12-3-6-namesec-12-3-6a)
-        - [`git push`<a id="sec-12-3-7" name="sec-12-3-7"></a>](#git-pusha-idsec-12-3-7-namesec-12-3-7a)
-        - [**README.md** on <https://github.com/mzimmerm/flutter_charts> - check if looks ok<a id="sec-12-3-8" name="sec-12-3-8"></a>](#readmemd-on-httpsgithubcommzimmermfluttercharts---check-if-looks-oka-idsec-12-3-8-namesec-12-3-8a)
-        - [`flutter packages pub publish --dry-run`<a id="sec-12-3-9" name="sec-12-3-9"></a>](#flutter-packages-pub-publish---dry-runa-idsec-12-3-9-namesec-12-3-9a)
-        - [`flutter packages pub publish`<a id="sec-12-3-10" name="sec-12-3-10"></a>](#flutter-packages-pub-publisha-idsec-12-3-10-namesec-12-3-10a)
-        - [Check <https://pub.dartlang.org/packages/flutter_charts><a id="sec-12-3-11" name="sec-12-3-11"></a>](#check-httpspubdartlangorgpackagesflutterchartsa-idsec-12-3-11-namesec-12-3-11a)
-        - [Test the package that was just published<a id="sec-12-3-12" name="sec-12-3-12"></a>](#test-the-package-that-was-just-publisheda-idsec-12-3-12-namesec-12-3-12a)
+# Table of Contents
 
-<!-- markdown-toc end -->
+1.  [New in the current release](#orgc6bc82e)
+    1.  [Illustration of the new "iterative auto layout" feature](#org5844188)
+        1.  [Autolayout step 1](#org908eb52)
+        2.  [Autolayout step 2](#org42945b0)
+        3.  [Autolayout step 3](#org646dcfb)
+        4.  [Autolayout step 4](#orge2115cf)
+        5.  [Autolayout step 5](#org283a53c)
+2.  [Flutter Charts - How to include the flutter\_charts library in your application](#org498c1ac)
+3.  [A chart created using flutter\_charts - example application](#orgbf1b0ea)
+4.  [Known packages, libraries and apps that use this this flutter\_charts package](#org7ca7238)
+5.  [Flutter Charts - an overview: data, options, classes](#orgea29e4e)
+6.  [Flutter beginner: Experimenting with Flutter using Flutter Charts](#org1378383)
+7.  [Flutter Charts - examples: LineChart and VerticalBarChart. Code and resulting charts](#org820bfaf)
+    1.  [Random Data (Y values), Random X Labels, Random Colors, Random Data Rows Legends, Data-Generated Y Labels.](#org8d7944a)
+    2.  [User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, Data-Generated Y Labels,](#orgab9b637)
+    3.  [User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, User-Provided Y Labels](#orgc5d954a)
+8.  [VerticalBar Chart - one more example, showing positive/negative stacks:](#org31ee3ac)
+    1.  [User-Provided Data (Y values), User-Provided X Labels, User-Provided Colors, User-Provided Data Rows Legends, User-Provided Y Labels](#org5aac946)
 
-# Table of contents     :TOC:<a id="sec-1" name="sec-1"></a>
 
--   Flutter Charts - How to include the flutter\_charts library in your application (See section )
--   An example of Flutter Chart output (See section )
--   Known packages, libraries and apps that use this this flutter\_charts package (See section )
--   Flutter Charts - an overview: data, options, classes (See section )
--   Experimenting with Flutter Charts: Using the included example app `file:example/lib/main.dart` (See section )
--   Flutter Charts - examples: LineChart and VerticalBarChart. Code and resulting charts (See section )
-    -   Random Data (Y values), Random X Labels, Random Colors, Random Data Rows Legends, Data-Generated Y Labels. (See section )
-    -   User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, Data-Generated Y Labels, (See section )
-    -   User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, User-Provided Y Labels (See section )
--   VerticalBar Chart - one more example, showing positive/negative stacks: (See section )
-    -   User-Provided Data (Y values), User-Provided X Labels, User-Provided Colors, User-Provided Data Rows Legends, User-Provided Y Labels (See section )
--   Bugs status (See section )
--   Future enhancements and work (See section )
--   Terminology and Selected Classes (See section )
--   Internal notes (See section )
-    -   Add ability to create a Table of Contents to README.org (See section )
-    -   Adding images to README.org (See section )
-    -   Pub - Publishing workflow on <https://pub.dartlang.org> (See section )
 
-# Flutter Charts - How to include the flutter\_charts library in your application<a id="sec-2" name="sec-2"></a>
+<a id="orgc6bc82e"></a>
+
+# New in the current release
+
+Current release 0.1.8.
+
+See <CHANGELOG.md> for the list of new features and bug fixes in this release.
+
+As noticed in the CHANGELOG, perhaps the most important new feature is the "iterative auto layout" of labels. 
+
+Labels auto layout is a sequence of steps, such as skipping some labels, tilting labels, or decreasing label font, that result in label 'fit' nicely, readably, without overflowing or running into each other.
+
+
+<a id="org5844188"></a>
+
+## Illustration of the new "iterative auto layout" feature
+
+This section illustrates how the auto layout behaves when less and less horizontal space is available to display the chart. 
+
+Flutter chart library automatically checks for the X label overlap, and follows with rule-based iterative re-layout, to prevent labels running into each other.
+
+To illustrate "stressed" horizontal space for the chart, we are gradually adding a text widget containing and increasing number of '<' signs on the right of the chart.
+
+
+<a id="org908eb52"></a>
+
+### Autolayout step 1
+
+Let's say there are six labels on a chart, and sufficient space to display labels horizontally. The result may look like this:
+
+![img](doc/readme_images/README.org_iterative-layout-step-1.png)
+
+We can see all x axis labels displayed it full, horizontally oriented.
+
+
+<a id="org42945b0"></a>
+
+### Autolayout step 2
+
+Next, let us make less available space by taking away some space on the right with a wider text label like this '<<<<<<'
+
+![img](doc/readme_images/README.org_iterative-layout-step-2.png)
+
+We can see the labels were automatically tilted by angle `ChartOptions labelTiltRadians` for the labels to fit.
+
+
+<a id="org646dcfb"></a>
+
+### Autolayout step 3
+
+Next, let us make even less available space by taking away some space on the right with a wider text label like this '<<<<<<<<<<<'.
+
+![img](doc/readme_images/README.org_iterative-layout-step-3.png)
+
+We can see that labels are not only tilted, but also automatically skipped (every 2nd) for labels not to overlap.
+
+
+<a id="orge2115cf"></a>
+
+### Autolayout step 4
+
+Next, let us make even less available space some more compared to step 3, with even a wider text label like this '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.
+
+![img](doc/readme_images/README.org_iterative-layout-step-4.png)
+
+We can see even more labels were skipped for labels to prevent overlap, the chart is showing evey 5th label
+
+
+<a id="org283a53c"></a>
+
+### Autolayout step 5
+
+Last, let us take away extreme amount of horizontal space by using '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
+
+![img](doc/readme_images/README.org_iterative-layout-step-5.png)
+
+Here we can see the "default auto layout" finally gave up, and overlaps labels. Also, the legend is now hidded, as there is not enough horizontal space.
+
+
+<a id="org498c1ac"></a>
+
+# Flutter Charts - How to include the flutter\_charts library in your application
 
 Flutter Charts is a charting library for Flutter, written in Flutter. Currently, column chart and line chart are supported.
 
 The package is published on pub for inclusion in your application's `pubspec.yaml`: The *Installing* tab on <https://pub.dartlang.org/packages/flutter_charts> contains instructions on how to include the *flutter\_charts* package in your application.
 
-# An example of Flutter Chart output<a id="sec-3" name="sec-3"></a>
 
-There is one example application in flutter\_charts: `example/lib/main.dart`. It shows how a Flutter Chart can be included in a Flutter application.
+<a id="orgbf1b0ea"></a>
+
+# A chart created using flutter\_charts - example application
+
+There is an example application in flutter\_charts: `example/lib/main.dart`. It shows how a Flutter Chart can be included in a Flutter application.
 
 You can run the example application using one of the methods (6, 7) in the paragraph below.
 
 This application is also used as a base to show several sample charts in the paragraphs below.
 
-Vertical Bar Chart (Column Chart)
+Here we show just two simple sample outputs, a column chart and a line chart.
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_154245_27063qmN.png)
+A sample Vertical Bar Chart (Column Chart)
 
-Point and Line Chart (Line Chart)
+![img](doc/readme_images/README.org_20171102_154245_27063qmN.png)
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_154329_270633wT.png)
+A sample point and Line Chart (Line Chart)
 
-Output uses semi-random data. You can click the blue + button to rerun chart with a different dataset.
+![img](doc/readme_images/README.org_20171102_154329_270633wT.png)
 
-# Known packages, libraries and apps that use this this flutter\_charts package<a id="sec-4" name="sec-4"></a>
+The output is generated from semi-random data. You can click the blue + button to rerun the chart with a different set of rows.
+
+
+<a id="org7ca7238"></a>
+
+# Known packages, libraries and apps that use this this flutter\_charts package
 
 1.  Michael R. Fairhurst's **Language reader app** - see <https://github.com/MichaelRFairhurst/flutter-language-reader-app>
 
-# Flutter Charts - an overview: data, options, classes<a id="sec-5" name="sec-5"></a>
+
+<a id="orgea29e4e"></a>
+
+# Flutter Charts - an overview: data, options, classes
 
 Before we show several examples of charts, a few notes. 
 
@@ -102,11 +160,16 @@ Before we show several examples of charts, a few notes.
     -   Series legends
 -   Currently the only purpose of `RandomChartData` is for use in the examples below. To be clear, `RandomChartData` Y values, series colors, and series legends are not completely random - they hardcode some demoable label, legends, color values, and data ranges (data random within the range).
 
-# Experimenting with Flutter Charts: Using the included example app `file:example/lib/main.dart`<a id="sec-6" name="sec-6"></a>
 
-There are multiple ways to experiment with Flutter Charts from your computer. We describe running Flutter Charts in development mode on your device (Android, iOS - follow 1, 2 or 3, 4 and 6), or alternatively on a device emulator (device emulator running from an IDE such as IntelliJ with Android Studio installed - follow 1, 2 or 3, 5, 6 or 7).
+<a id="org1378383"></a>
 
-1.  Install Flutter on your computer. See <https://flutter.io/> installation section.
+# Flutter beginner: Experimenting with Flutter using Flutter Charts
+
+This section describes, very briefly with links, how to install Flutter, and the Flutter Charts package.
+
+This section We describe running Flutter Charts in development mode on your device (Android, iOS - follow 1, 2 or 3, 4 and 6), or alternatively on a device emulator (device emulator running from an IDE such as IntelliJ with Android Studio installed - follow 1, 2 or 3, 5, 6 or 7).
+
+1.  Install Flutter on your computer. See the installation section on <https://flutter.io/>.
 2.  Clone flutter\_charts code from Github to your computer. Needs git client.
     
         cd DIRECTORY_OF_CHOICE
@@ -133,7 +196,10 @@ There are multiple ways to experiment with Flutter Charts from your computer. We
 7.  (Alternative to 6.) Run  Flutter Charts demo app from IDE. This will work only with method 5. 
     -   Start IntelliJ IDE, create a project in the `DIRECTORY_OF_CHOICE/flutter_charts` start an Android emulator, then click on the Run button in Intellij (which should show the `file:example/lib/main.dart` in the run button).
 
-# Flutter Charts - examples: LineChart and VerticalBarChart. Code and resulting charts<a id="sec-7" name="sec-7"></a>
+
+<a id="org820bfaf"></a>
+
+# Flutter Charts - examples: LineChart and VerticalBarChart. Code and resulting charts
 
 Flutter Charts code allow to define the following data elements:
 
@@ -141,38 +207,38 @@ Flutter Charts code allow to define the following data elements:
 
 
 <colgroup>
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="left">*Data (Y values)*</td>
-<td class="left">User-Provided or Random</td>
+<td class="org-left">*Data (Y values)*</td>
+<td class="org-left">User-Provided or Random</td>
 </tr>
 
 
 <tr>
-<td class="left">*X Labels*</td>
-<td class="left">User-Provided or Random</td>
+<td class="org-left">*X Labels*</td>
+<td class="org-left">User-Provided or Random</td>
 </tr>
 
 
 <tr>
-<td class="left">*Options including Colors*</td>
-<td class="left">User-Provided or Random</td>
+<td class="org-left">*Options including Colors*</td>
+<td class="org-left">User-Provided or Random</td>
 </tr>
 
 
 <tr>
-<td class="left">*Data Rows Legends*</td>
-<td class="left">User-Provided or Random</td>
+<td class="org-left">*Data Rows Legends*</td>
+<td class="org-left">User-Provided or Random</td>
 </tr>
 
 
 <tr>
-<td class="left">*Y Labels*</td>
-<td class="left">User-Provided or Data-Generated</td>
+<td class="org-left">*Y Labels*</td>
+<td class="org-left">User-Provided or Data-Generated</td>
 </tr>
 </tbody>
 </table>
@@ -181,7 +247,10 @@ The examples below show a few alternative code snippets (User-Provided or Random
 
 The chart images were obtained by substituting the code snippet to the `file:example/lib/main.dart` code. 
 
-## Random Data (Y values), Random X Labels, Random Colors, Random Data Rows Legends, Data-Generated Y Labels.<a id="sec-7-1" name="sec-7-1"></a>
+
+<a id="org8d7944a"></a>
+
+## Random Data (Y values), Random X Labels, Random Colors, Random Data Rows Legends, Data-Generated Y Labels.
 
 This example shows that Data-Generated Y labels is the default.  
 Flutter Charts support reasonably intelligently generated Y Labels from data, including dealing with negatives.
@@ -196,13 +265,16 @@ Code in `defineOptionsAndData()`:
 
 Result line chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_172324_27063E7Z.png)
+![img](doc/readme_images/README.org_20171102_172324_27063E7Z.png)
 
 Result vertical bar chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_173422_27063ePm.png)
+![img](doc/readme_images/README.org_20171102_173422_27063ePm.png)
 
-## User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, Data-Generated Y Labels,<a id="sec-7-2" name="sec-7-2"></a>
+
+<a id="orgab9b637"></a>
+
+## User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, Data-Generated Y Labels,
 
 Code in `defineOptionsAndData()`:
 
@@ -228,13 +300,16 @@ Code in `defineOptionsAndData()`:
 
 Result line chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_180657_27063rZs.png)
+![img](doc/readme_images/README.org_20171102_180657_27063rZs.png)
 
 Result vertical bar chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_180915_270634jy.png)
+![img](doc/readme_images/README.org_20171102_180915_270634jy.png)
 
-## User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, User-Provided Y Labels<a id="sec-7-3" name="sec-7-3"></a>
+
+<a id="orgc5d954a"></a>
+
+## User-Provided Data (Y values), User-Provided X Labels, Random Colors, User-Provided Data Rows Legends, User-Provided Y Labels
 
 This example show how to use the option `useUserProvidedYLabels`, and scaling of data to the Y labels range.
 
@@ -284,17 +359,23 @@ Code in `defineOptionsAndData()`:
 
 Result line chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_191037_27063qtB.png)
+![img](doc/readme_images/README.org_20171102_191037_27063qtB.png)
 (Disclaimer: Not actually measured)
 
 Result vertical bar chart: Here the Y values should be numeric (if any) as manual labeling "Ok", "Higher", High" does not make sense for stacked type charts.
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_191138_2706333H.png)
+![img](doc/readme_images/README.org_20171102_191138_2706333H.png)
 (Disclaimer: Not actually measured)
 
-# VerticalBar Chart - one more example, showing positive/negative stacks:<a id="sec-8" name="sec-8"></a>
 
-## User-Provided Data (Y values), User-Provided X Labels, User-Provided Colors, User-Provided Data Rows Legends, User-Provided Y Labels<a id="sec-8-1" name="sec-8-1"></a>
+<a id="org31ee3ac"></a>
+
+# VerticalBar Chart - one more example, showing positive/negative stacks:
+
+
+<a id="org5aac946"></a>
+
+## User-Provided Data (Y values), User-Provided X Labels, User-Provided Colors, User-Provided Data Rows Legends, User-Provided Y Labels
 
 This example has again user defined Y Labels, with a bar chart, using the smart auto-layout of user defined Y Labels. The chart shows negative and positive values similar to %down/%up stock charts.
 
@@ -312,7 +393,7 @@ Code in `defineOptionsAndData()`:
         "<-2%",
         "0%_+2%",
         ">+2%"];
-      // each column absolute values should add to same number todo - 100 would make more sense, to represent 100% of stocks in each category
+      // each column absolute values should add to same number todo- 100 would make more sense, to represent 100% of stocks in each category
       _chartData.dataRows = [
         [-9.0, -8.0,  -8.0,  -5.0, -8.0, ],
         [-1.0, -2.0,  -4.0,  -1.0, -1.0, ],
@@ -336,118 +417,7 @@ Code in `defineOptionsAndData()`:
 
 Result vertical bar chart:
 
-![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_195745_27063ECO.png)
+![img](doc/readme_images/README.org_20171102_195745_27063ECO.png)
 
 (there is a bug here,see Known Bugs)
 
-# Bugs status<a id="sec-9" name="sec-9"></a>
-
--   [ ] Chart area needs clipping in the application
--   [ ] Take a look at the stock charts example. There is a bug reverting series on the negative values - both negative dataRows, and dataRowsColors must be reverted for the chart stacks to show in intended order (black, green grey red from top). But even then,  dataRowsLegends are incorrect.
--   [X] <https://github.com/mzimmerm/flutter_charts/issues/5> - Coloring support: Make line chart dot colors settable
--   [ ] 
-
-# Future enhancements and work<a id="sec-10" name="sec-10"></a>
-
-Bug fixes:
-
--   Clip chart to not paint outside area provided by Flutter app.
--   Clip labels and legends not to run into the neighbor, if too long.
-
-On the boundary of bug and enhancement:
-
--   For ChartOptions.useUserProvidedYLabels = true. See example with User defined YLabels: Current implementation sets the minimum of dataRows range (1.0 in the example) on the level of the first Y Label ("Ok" in this example), and the maximum  of dataRows range (10.0 in this example) on the level of the last Y Label ("High" in this example). This is not desirable, we need to add a userProvidedYLabelsBoundaryMin/Max.
-
-Enhancements:
-
--   Create document / image showing layout and spacing - show option variables on image
--   Simple:
-    -   Add options to hide the grid (keep axes)
-    -   Add options to hide  axes (if axes not shown, labels should not show?)
-    -   Decrease option for default spacing around the Y axis.
--   First, probably need to provide tooltips
--   Next, a few more chart types: Spline line chart (stacked line chart), Grouped VerticalBar chart,
--   Next, re-implement the layout more generically and clearly. Space saving changes such as *tilting* labels.
--   Next, add ability to invert X and Y axis (values on horizontal axis)
-
-# TODO Terminology and Selected Classes<a id="sec-11" name="sec-11"></a>
-
--   **(Presenter)Leaf      :** The finest visual element presented in each  "column of view" in chart - that is, all widgets representing series of data displayed above each X label. For example, for Line chart, the leaf would be one line and dot representing one Y value at one X label. For the bar chart, the leaf would be one bar representing one (stacked) Y value at one X label.
-    -   Classes: Presenter, LineAndHotspotPresenter, VerticalBarPresenter, PresenterCreator
--   **Painter              :** Class which paints to chart to canvas. Terminology and class structure taken from Flutter's Painter and Painting classes.
-    -   Classes: todo
-
-# Internal notes<a id="sec-12" name="sec-12"></a>
-
-## DONE Add ability to create a Table of Contents to README.org<a id="sec-12-1" name="sec-12-1"></a>
-
--   [X] Install toc-org package
--   [X] Add to init.el
-    
-        (if (require 'toc-org nil t)
-          (add-hook 'org-mode-hook 'toc-org-enable)
-        (warn "toc-org not found"))
--   [X] Every time README.org is saved, first heading with a :TOC: tag will be updated with the current table of contents.
--   [X] So nothing special need be done after the above is configured.
-
-## Adding images to README.org<a id="sec-12-2" name="sec-12-2"></a>
-
--   [ ] <https://pub.dartlang.org> does not allow storing images.
--   [ ] Add / move new images to `flutter_charts/doc/readme_images`
--   [ ] org file, change image links to look like ![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_154245_27063qmN.png)~
-
-## Pub - Publishing workflow on <https://pub.dartlang.org><a id="sec-12-3" name="sec-12-3"></a>
-
-### Notes:<a id="sec-12-3-1" name="sec-12-3-1"></a>
-
-1.  Pub requires the following file in project to show the correct tabs on pub
-
-    1.  Tab README.md    - Needs the file
-    
-    2.  Tab CHANGELOG.md - Needs the file
-    
-    3.  Tab Example      - this tab appears if the project file `file:flutter_charts/example/lib/main.dart` exists
-    
-    4.  Tab Installing   - shows automatically
-
-### IF **README.md** needs change<a id="sec-12-3-2" name="sec-12-3-2"></a>
-
-1.  **README.org**: make sure image links point to `flutter_charts/doc/readme_images`
-
-2.  **README.org**: Conversion steps to **README.md**
-
-    To convert **README.org** to **README.md**, we need to do a few extra steps for README.md image links to be readable on <https://pub.dartlang.org>.
-    
-    1.  Note: Org file which has :TOC: in heading, generates TOC on every save.
-    2.  **README.org**: Export org to md: `C-c C-e m m` in the org file to create the generated md file
-    3.  **README.md**: Delete generated TOC
-    4.  **README.md**: Generate md-native TOC:
-        -   Cursor on top
-        -   `M-x: markdown-toc/generate-toc`
-    5.  **README.md**: Fix image links in the README.md - links must look like this:
-        
-            -![img](https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_180657_27063rZs.png)
-            +![img](https://github.com/mzimmerm/flutter_charts/raw/master/https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/README.org_20171102_180657_27063rZs.png)
-    6.  **README.md**: This is achieved with: `replace-string https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/ https://github.com/mzimmerm/flutter_charts/raw/master/https://github.com/mzimmerm/flutter_charts/raw/master/doc/readme_images/`
-
-### **pubspec.yaml** - Increase version number<a id="sec-12-3-3" name="sec-12-3-3"></a>
-
-### `cd flutter_charts; flutter packages pub upgrade`<a id="sec-12-3-4" name="sec-12-3-4"></a>
-
-### `cd flutter_charts; flutter packages pub get`<a id="sec-12-3-5" name="sec-12-3-5"></a>
-
-### Test included app from IntelliJ<a id="sec-12-3-6" name="sec-12-3-6"></a>
-
-### `git push`<a id="sec-12-3-7" name="sec-12-3-7"></a>
-
-### **README.md** on <https://github.com/mzimmerm/flutter_charts> - check if looks ok<a id="sec-12-3-8" name="sec-12-3-8"></a>
-
-### `flutter packages pub publish --dry-run`<a id="sec-12-3-9" name="sec-12-3-9"></a>
-
-### `flutter packages pub publish`<a id="sec-12-3-10" name="sec-12-3-10"></a>
-
-### Check <https://pub.dartlang.org/packages/flutter_charts><a id="sec-12-3-11" name="sec-12-3-11"></a>
-
-### Test the package that was just published<a id="sec-12-3-12" name="sec-12-3-12"></a>
-
-1.  `cd flutter_charts_sample_app; flutter packages pub upgrade; flutter packages pub get; flutter run`

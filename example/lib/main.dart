@@ -11,7 +11,7 @@ import 'package:flutter_charts/flutter_charts.dart';
 
 /// Example of simple line chart usage in an application.
 ///
-/// Library note: This file is same level as _lib_ so everything from _lib_ must
+/// Library note: This file is on the same level as _lib_ so everything from _lib_ must
 /// be imported using the "package:" scheme, e.g.
 /// > import 'package:flutter_charts/flutter_charts.dart';
 void main() {
@@ -101,7 +101,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   LineChartOptions _lineChartOptions;
   ChartOptions _verticalBarChartOptions;
-
+  LabelLayoutStrategy _xContainerLabelLayoutStrategy;
   ChartData _chartData;
 
   _MyHomePageState() {
@@ -111,21 +111,21 @@ class _MyHomePageState extends State<MyHomePage> {
   void defineOptionsAndData() {
     _lineChartOptions = new LineChartOptions();
     _verticalBarChartOptions = new VerticalBarChartOptions();
-    _chartData = new ChartData();
-    _chartData.dataRowsLegends = [
-      "Spring",
-      "Summer"
-    ];
-    _chartData.dataRows = [
-      [1.0, 2.0, 3.0, 4.0],
-      [4.0, 3.0, 5.0, 6.0]
-    ];
-    _chartData.xLabels = ["One", "Two", "Three", "Four"];
-    _chartData.assignDataRowsDefaultColors();
-    // Note: ChartOptions.useUserProvidedYLabels default is still used (false);
+    // If you were to use your own extension of
+    //   DefaultIterativeLabelLayoutStrategy or LayoutStrategy,
+    //   this is how to create an instance.
+    // If _xContainerLabelLayoutStrategy
+    //   is not set (remains null), the charts instantiate
+    //   the DefaultIterativeLabelLayoutStrategy.
+    _xContainerLabelLayoutStrategy = new DefaultIterativeLabelLayoutStrategy(
+      options: _verticalBarChartOptions,
+    );
+    // _xContainerLabelLayoutStrategy = null;
+    _chartData = new RandomChartData(
+        useUserProvidedYLabels: _lineChartOptions.useUserProvidedYLabels);
   }
 
-  /* 7 Default - Random data
+  /* ALWAYS ON TOP - DEFAULT - Default - Random data
   void defineOptionsAndData() {
     _lineChartOptions = new LineChartOptions();
     _verticalBarChartOptions = new VerticalBarChartOptions();
@@ -134,7 +134,58 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   */
 
-  /* 6 Test a bug reported by Lonenzo Tejera
+  /* 9  - Explicit use of DefaultIterativeLabelLayoutStrategy.
+          The _xContainerLabelLayoutStrategy must also work commented out.
+
+  void defineOptionsAndData() {
+    _lineChartOptions = new LineChartOptions();
+    _verticalBarChartOptions = new VerticalBarChartOptions();
+    // If you were to use your own extension of
+    //   DefaultIterativeLabelLayoutStrategy or LayoutStrategy,
+    //   this is how to create an instance.
+    // If _xContainerLabelLayoutStrategy
+    //   is not set (remains null), the charts instantiate
+    //   the DefaultIterativeLabelLayoutStrategy.
+    _xContainerLabelLayoutStrategy = new DefaultIterativeLabelLayoutStrategy(
+      options: _verticalBarChartOptions,
+    );
+    // _xContainerLabelLayoutStrategy = null;
+    _chartData = new RandomChartData(
+        useUserProvidedYLabels: _lineChartOptions.useUserProvidedYLabels);
+  }
+   */
+
+  /* 8 - Explicit use of DefaultIterativeLabelLayoutStrategy (see also 9),
+         to show how to use in case extensions are needed
+
+  void defineOptionsAndData() {
+    _lineChartOptions = new LineChartOptions();
+    _verticalBarChartOptions = new VerticalBarChartOptions();
+    _xContainerLabelLayoutStrategy = new DefaultIterativeLabelLayoutStrategy(
+      options: _verticalBarChartOptions,
+    );
+    _chartData = new ChartData();
+    _chartData.dataRowsLegends = ["Spring", "Summer", "Fall", "Winter"];
+    _chartData.dataRows = [
+      [1.0, 2.0, 3.0, 4.0, 6.0],
+      [4.0, 3.0, 5.0, 6.0, 1.0],
+    ];
+    _chartData.xLabels = ["One", "Two", "Three", "Four", "Five"];
+    _chartData.assignDataRowsDefaultColors();
+    // Note: ChartOptions.useUserProvidedYLabels default is still used (false);
+  }
+   */
+
+  /* 7 - Default - Random data
+  void defineOptionsAndData() {
+    _lineChartOptions = new LineChartOptions();
+    _verticalBarChartOptions = new VerticalBarChartOptions();
+    _chartData = new RandomChartData(
+        useUserProvidedYLabels: _lineChartOptions.useUserProvidedYLabels);
+  }
+  */
+
+  /* 6 Test a bug reported by Lonenzo Tejera - todo-1 - also check Y range that should have more points.
 
   void defineOptionsAndData() {
     _lineChartOptions = new LineChartOptions();
@@ -146,9 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
       "Fall",
       "Winter"];
     _chartData.dataRows = [
-      [1.0, 2.0, 3.0, 4.0],
-      [4.0, 3.0, 5.0, 6.0]
-    ]
+      [1.0, 2.0, 3.0, 4.0, 6.0],
+      [4.0, 3.0, 5.0, 6.0, 1.0],
+    ];
     _chartData.xLabels =  ["One", "Two", "Three", "Four", "Five"];
     _chartData.assignDataRowsDefaultColors();
     // Note: ChartOptions.useUserProvidedYLabels default is still used (false);
@@ -326,12 +377,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // devicePixelRatio = number of device pixels for each logical pixel.
     // note: in all known hardware, size(logicalPixel) > size(devicePixel)
     // note: this is also, practically, never needed
-    double logicalToDevicePixelSize = mediaQueryData.devicePixelRatio;
+    // double logicalToDevicePixelSize = mediaQueryData.devicePixelRatio;
 
     // textScaleFactor = number of font pixels for each logical pixel.
     // note: with some fontSize, if text scale factor is 1.5
     //       => text is 1.5x larger than the font size.
-    double fontScale = mediaQueryData.textScaleFactor;
+    // double fontScale = mediaQueryData.textScaleFactor;
 
     // Let us give the LineChart full width and half of height of window.
     final ui.Size chartLogicalSize =
@@ -343,16 +394,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
     defineOptionsAndData();
 
+    /* keep
     LineChart lineChart = new LineChart(
       painter: new LineChartPainter(),
       container: new LineChartContainer(
-          chartData: _chartData, chartOptions: _lineChartOptions),
+        chartData: _chartData, // @required
+        chartOptions: _lineChartOptions, // @required
+        xContainerLabelLayoutStrategy: _xContainerLabelLayoutStrategy, // @optional
+      ),
     );
+    */
 
     VerticalBarChart verticalBarChart = new VerticalBarChart(
       painter: new VerticalBarChartPainter(),
       container: new VerticalBarChartContainer(
-          chartData: _chartData, chartOptions: _verticalBarChartOptions),
+        chartData: _chartData, // @required
+        chartOptions: _verticalBarChartOptions, // @required
+        xContainerLabelLayoutStrategy: _xContainerLabelLayoutStrategy, // @optional
+      ),
     );
 
     // [MyHomePage] extends [StatefulWidget].
@@ -446,17 +505,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   // Row -> Expanded -> Chart expands chart horizontally <-->
                   new Expanded(
-                    child: verticalBarChart,
+                    child: verticalBarChart, // verticalBarChart, lineChart
                   ),
                   // new Text('<<'), // horizontal
                   // new Text('<<<<<<'),   // tilted
-                  // new Text('<<<<<<<<<<<'),   // skiped (shows 3 labels)
-                  // new Text('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'), // skiped (2)
-                  // new Text('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'),// gave up
-                  new Text('<<<<<<'),   // tilted
+                  // new Text('<<<<<<<<<<<'),   // skiped (shows 3 labels, legend present)
+                  // new Text('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'), // skiped (shows 2 labels, legend present but text vertical)
+                  // new Text('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'),// labels do overlap, legend NOT present
+                  new Text('<<<<<<'),// labels do overlap, legend NOT present
                 ],
-              ), //
-            ), // Column -> Expanded
+              ),
+            ),
 
             new Text('^^^^^^:'),
             new RaisedButton(

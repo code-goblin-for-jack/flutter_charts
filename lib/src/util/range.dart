@@ -3,9 +3,9 @@ import 'package:decimal/decimal.dart' as decimal;
 import 'package:flutter_charts/src/chart/options.dart';
 import 'util.dart' as util;
 
-// todo -11 - this library (range.dart) has been modified for Dart 2.0
+// todo-2 - this library (range.dart) has been modified for Dart 2.0
 //            using a hack which replaces all List<num> to List<double>,
-//            also some int replaced with double
+//            also some int replaced with double. Parametrize with T
 
 
 /// Scalable range, supporting creation of scaled x and y axis labels.
@@ -19,9 +19,6 @@ class Range {
 
   ChartOptions _options;
 
-  /// The auto-label generator [makeLabelsFromData] can decrease this but not increase. todo 00 - move to options
-  int _maxLabels;
-
   /// Constructs a scalable range from a list of passed [values].
   ///
   /// Given a list of [values] (to show on Y axis),
@@ -31,18 +28,15 @@ class Range {
   Range({
     List<double> values,
     ChartOptions chartOptions,
-    int maxLabels = 10,
   }) {
     _values = values;
     // todo 1 maxLabels does not work. Enable and add to test
-    _maxLabels = maxLabels;
     _options = chartOptions;
   }
 
   /// superior and inferior closure - min and max of values
   Interval get _closure => new Interval(
-      _values.reduce(math.min).toDouble(), _values.reduce(math.max).toDouble(), true, true);
-       // todo -11 _values.reduce(math.min), _values.reduce(math.max), true, true);
+      _values.reduce(math.min).toDouble(), _values.reduce(math.max).toDouble(), true, true); // todo-2 remove toDouble after parametrization
 
   /// Automatically generates unscaled labels (more precisely their values)
   /// from data.
@@ -55,24 +49,19 @@ class Range {
   }) {
     num min = _closure.min;
     num max = _closure.max;
-    num diff = max - min;
 
     Poly polyMin = new Poly(from: min);
     Poly polyMax = new Poly(from: max);
-    Poly polyDiff = new Poly(from: diff);
 
-    int powerMin = polyMin.maxPower;
     int signMin = polyMin.signum;
-    int powerMax = polyMax.maxPower;
     int signMax = polyMax.signum;
-    int powerDiff = polyDiff.maxPower;
-    int signDiff = polyDiff.signum;
 
     // envelope for all y values
     num from, to;
 
     // Need to handle all combinations of the above (a < b < c etc).
     // There are not that many, because pMin <= pMax and pDiff <= pMax.
+    /* keep
     if (false && powerDiff < powerMin) {
       // todo 1 - enable conditions where y=0 axis is not needed to show,
       //          to allow for details, mainly for lots of values.
@@ -80,6 +69,7 @@ class Range {
       from = polyMin.floorAtMaxPower.toDouble();
       to = polyMax.ceilAtMaxPower.toDouble();
     } else {
+      */
       // for now, always start with min or 0, and end at max (reverse if both negative).
 
       if (signMax <= 0 && signMin <= 0 || signMax >= 0 && signMin >= 0) {
@@ -95,7 +85,7 @@ class Range {
         from = min;
         to = max;
       }
-    }
+    // keep }
 
     // Now make labels, evenly distributed in the from, to range.
     // Make labels only in polyMax steps (e.g. 100, 200 - not 100, 110 .. 200).
@@ -146,7 +136,7 @@ class Range {
     List<double> labels = [];
     int power = math.max(powerMin, powerMax);
 
-    // todo -1 refactor this and make generic
+    // todo-1 refactor this and make generic
     if (signMax <= 0 && signMin <= 0 || signMax >= 0 && signMin >= 0) {
       // both negative or positive
       if (signMax <= 0) {
@@ -183,65 +173,6 @@ class Range {
     return labels;
   }
 }
-
-
-/* // todo -11 repla
-// original version before replacing int to double where needed
-  List<double> _distributeLabelsIn(Interval interval) {
-    Poly polyMin = new Poly(from: interval.min);
-    Poly polyMax = new Poly(from: interval.max);
-
-    int powerMax = polyMax.maxPower;
-    int coeffMax = polyMax.coeffAtMaxPower;
-    int signMax = polyMax.signum;
-
-    // using Min makes sense if one or both (min, max) are negative
-    int powerMin = polyMin.maxPower;
-    int coeffMin = polyMin.coeffAtMaxPower;
-    int signMin = polyMin.signum;
-
-    List<double> labels = [];
-    int power = math.max(powerMin, powerMax);
-
-    // todo 1 refactor this and make generic
-    if (signMax <= 0 && signMin <= 0 || signMax >= 0 && signMin >= 0) {
-      // both negative or positive
-      if (signMax <= 0) {
-        for (int l = signMin * coeffMin; l <= 0; l++) {
-          labels.add(l * math.pow(10, power));
-        }
-      } else {
-        // signMax >= 0
-        for (int l = 0; l <= signMax * coeffMax; l++) {
-          labels.add(l * math.pow(10, power));
-        }
-      }
-    } else {
-      // min is negative, max is positive - need added logic
-      if (powerMax == powerMin) {
-        for (int l = signMin * coeffMin; l <= signMax * coeffMax; l++) {
-          labels.add(l * math.pow(10, power));
-        }
-      } else if (powerMax < powerMin) {
-        for (int l = signMin * coeffMin; l <= 1; l++) {
-          // just one over 0
-          labels.add(l * math.pow(10, power));
-        }
-      } else if (powerMax > powerMin) {
-        for (int l = signMin * 1; l <= signMax * coeffMax; l++) {
-          // just one under 0
-          labels.add(l * math.pow(10, power));
-        }
-      } else {
-        throw new Exception("Unexpected power: $powerMin, $powerMax ");
-      }
-    }
-
-    return labels;
-  }
-}
-
- */
 
 /// Encapsulating Y axis scaling (dataRange scaling to available pixels)
 /// and Y Labels creation and formatting.
@@ -395,7 +326,7 @@ class LabelInfo {
 
   /// Self-scale the RangeOutput to the scale of the available chart size.
   void _scaleLabelValue() {
-    // todo 00 consider what to do about the toDouble() - may want to ensure higher up
+    // todo-2 consider what to do about the toDouble() - may want to ensure higher up
     scaledLabelValue = parentScaler.scaleY(value: labelValue.toDouble());
   }
 
@@ -465,16 +396,6 @@ class Poly {
     return totalLen - fractLen - 1;
   }
 
-  int _geOnePower(decimal.Decimal tester) {
-    if (tester < _one) throw new Exception("$tester Failed: tester < 1.0");
-    int power = -1;
-    while (tester >= _one) {
-      tester = tester / _ten;
-      power += 1; // power = 0, 1, 2, etc
-    }
-    return power;
-  }
-
   int _ltOnePower(decimal.Decimal tester) {
     if (tester >= _one) throw new Exception("$tester Failed: tester < 1.0");
     int power = 0;
@@ -487,8 +408,7 @@ class Poly {
 }
 
 // todo 0 add tests; also make constant; also add validation for min before max
-// todo -11: parametrize with T
-// todo -11: replaced num with double
+// todo-2: replaced num with double,  parametrize with T instead so it works for both
 
 class Interval {
   Interval(this.min, this.max,
