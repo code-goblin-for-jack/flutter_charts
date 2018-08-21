@@ -56,7 +56,7 @@ abstract class ChartPainter extends widgets.CustomPainter {
     drawGrid(canvas);
     drawYLabels(canvas);
     drawXLabels(canvas);
-    drawLegend(canvas);
+//    drawLegend(canvas);
     drawPresentersColumns(canvas); // bars (bar chart), lines and points (line)
 
     // clip canvas to size - this does nothing

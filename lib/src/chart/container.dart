@@ -1337,11 +1337,12 @@ class LegendContainer extends ChartAreaContainer {
 
     _layoutSize = new ui.Size(
       _layoutExpansion._width,
-      _legendItemContainers
-              .map((legendItemContainer) =>
-                  legendItemContainer.layoutSize.height)
-              .reduce(math.max) +
-          (2.0 * containerMarginTB),
+      0.0,
+//      _legendItemContainers
+//              .map((legendItemContainer) =>
+//                  legendItemContainer.layoutSize.height)
+//              .reduce(math.max) +
+//          (2.0 * containerMarginTB),
     );
   }
 
