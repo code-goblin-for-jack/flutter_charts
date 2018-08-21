@@ -12,12 +12,15 @@ documentation: https://pub.dartlang.org/packages/flutter_charts/doc
 dependencies:
   flutter:
     sdk:  flutter
-  decimal: ">=0.1.4 <0.2.0"
+  decimal: ">=0.1.4 <0.3.3"
 
 dev_dependencies:
   test:
   flutter_test:
     sdk:  flutter
+
+environment:
+  sdk: '>=1.19.0 <3.0.0'
 
 
 # Example of dependency on another project: local, github, locally hosted on own pub server on 8080,
@@ -31,7 +34,7 @@ dev_dependencies:
 #     git:
 #       url: https://github.com/mzimmerm/flutter_charts_common.git
 #       branch: master
-#  
+#
 #   # locally hosted on own pub server on 8080
 #   flutter_charts_common:
 #     hosted:
